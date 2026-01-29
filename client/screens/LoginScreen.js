@@ -13,8 +13,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimatedBackground from '../components/AnimatedBackground';
-
-const API_URL = 'http://localhost:3000'; // Change this to your server URL
+import { API_URL } from '../config';
 
 export default function LoginScreen({ onBack, onSuccess }) {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Animated, Dimensions, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Dimensions, StyleSheet } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -48,9 +48,8 @@ class Dot {
 
 export default function AnimatedBackground() {
   const dotsRef = useRef([]);
-  const frameRef = useRef(null);
   const lastKillTimeRef = useRef(Date.now());
-  const canvasOpacity = useRef(new Animated.Value(0)).current;
+  const [, forceUpdate] = useState({});
 
   useEffect(() => {
     // Initialize dots
@@ -63,15 +62,8 @@ export default function AnimatedBackground() {
     }
     dotsRef.current = dots;
 
-    // Fade in animation
-    Animated.timing(canvasOpacity, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-
     // Animation loop
-    const animate = () => {
+    const interval = setInterval(() => {
       const currentTime = Date.now();
       
       // Update all dots
@@ -100,20 +92,17 @@ export default function AnimatedBackground() {
         lastKillTimeRef.current = currentTime;
       }
 
-      frameRef.current = requestAnimationFrame(animate);
-    };
-
-    animate();
+      // Force re-render
+      forceUpdate({});
+    }, 1000 / 30); // 30 FPS
 
     return () => {
-      if (frameRef.current) {
-        cancelAnimationFrame(frameRef.current);
-      }
+      clearInterval(interval);
     };
   }, []);
 
   return (
-    <Animated.View style={[styles.container, { opacity: canvasOpacity }]}>
+    <View style={styles.container}>
       <View style={styles.canvas}>
         {dotsRef.current.map((dot, i) => (
           <React.Fragment key={i}>
@@ -164,7 +153,7 @@ export default function AnimatedBackground() {
           )
         ))}
       </View>
-    </Animated.View>
+    </View>
   );
 }
 
