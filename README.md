@@ -95,13 +95,27 @@ npm start
 ```bash
 cd server
 npm install
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env with your database credentials and JWT secret
+
+# Start PostgreSQL (if not already running)
+# Then run the server
 npm start
 ```
+
+The server will:
+- Initialize the PostgreSQL database schema
+- Start the Express REST API on port 3000
+- Start the Socket.IO server for real-time communication
+
+For detailed Socket.IO API documentation, see [server/SOCKET_IO_DOCS.md](server/SOCKET_IO_DOCS.md).
 
 ## Development Roadmap
 
 - [x] Initial project scaffolding
-- [ ] Core server architecture with Socket.IO
+- [x] Core server architecture with Socket.IO
 - [ ] Database schema design
 - [ ] GPS location tracking implementation
 - [ ] Map integration with Mapbox
