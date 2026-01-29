@@ -1,7 +1,7 @@
 const express = require('express'); // Import Express
 const app = express(); // Create an Express application instance
 const port = 3000; // Define the port number
-const userRoutes = require('./userRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 
 app.use(express.json());
