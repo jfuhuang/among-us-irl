@@ -101,7 +101,7 @@ npm start
 ## Development Roadmap
 
 - [x] Initial project scaffolding
-- [ ] Core server architecture with Socket.IO
+- [x] Core server architecture with Socket.IO
 - [ ] Database schema design
 - [ ] GPS location tracking implementation
 - [ ] Map integration with Mapbox
