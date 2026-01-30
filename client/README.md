@@ -25,47 +25,88 @@ React Native mobile client for Among Us IRL game.
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- **Node.js v20 or higher** (recommended: v20 LTS)
 - npm or yarn
-- Expo CLI (`npm install -g expo-cli`)
-- iOS Simulator (for iOS development) or Android Emulator (for Android development)
+- Expo Go app on your mobile device, or:
+  - iOS Simulator (macOS only)
+  - Android Emulator (requires Android Studio)
 
 ## Installation
 
-1. Install dependencies:
-   ```bash
-   npm install --legacy-peer-deps
-   ```
+### 1. Install Node.js (if needed)
 
-2. Configure the API URL:
-   - Edit `config.js` to set your backend server URL
-   - Default is `http://localhost:3000`
+**Using nvm (recommended):**
+
+```bash
+# Install nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+# Reload shell or source nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# Install and use Node 20
+nvm install 20
+nvm use 20
+nvm alias default 20
+
+# Verify
+node -v  # should show v20.x.x
+```
+
+**Alternative:** Download from [nodejs.org](https://nodejs.org)
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+**Note:** If you encounter peer dependency conflicts, try:
+```bash
+npm install --legacy-peer-deps
+```
+
+### 3. Configure the API URL
+
+Edit `config.js` to set your backend server URL:
+- Default is `http://localhost:3000`
+- For physical devices, use your computer's IP address (e.g., `http://192.168.1.100:3000`)
 
 ## Running the App
 
-Start the Expo development server:
+### Start the development server
 
 ```bash
-npm start
+npx expo start
 ```
 
-This will open Expo DevTools in your browser. From there you can:
-- Press `i` to open in iOS Simulator
-- Press `a` to open in Android Emulator
-- Scan the QR code with Expo Go app on your physical device
+This will start Metro bundler and show a QR code in your terminal.
 
-### Running on Specific Platforms
+### Run on your device or emulator
 
+**Option 1: Physical device (easiest)**
+1. Install the **Expo Go** app from the App Store (iOS) or Google Play (Android)
+2. Ensure your device is on the same Wi-Fi network as your development machine
+3. Scan the QR code with:
+   - iOS: Camera app
+   - Android: Expo Go app
+
+**Option 2: Emulator/Simulator**
 ```bash
-# iOS
-npm run ios
+# Android (requires Android Studio & emulator running)
+npx expo run:android
 
-# Android
-npm run android
-
-# Web (for testing, limited functionality)
-npm run web
+# iOS (macOS only, requires Xcode)
+npx expo run:ios
 ```
+
+**Keyboard shortcuts in terminal:**
+- Press `a` to open Android emulator
+- Press `i` to open iOS simulator (macOS only)
+- Press `r` to reload app
+- Press `m` to toggle menu
+- Press `c` to clear cache and restart
 
 ## Project Structure
 
@@ -122,26 +163,90 @@ The app expects the following API endpoints on the backend:
 
 ## Troubleshooting
 
+### Node.js Version Issues
+
+**Error: `Unexpected token '?'` or `toReversed is not a function`**
+
+You're using an outdated Node.js version. Expo SDK 50+ requires Node 18+, and Metro bundler requires Node 20+ for full compatibility.
+
+**Solution:**
+```bash
+# Using nvm
+nvm install 20
+nvm use 20
+nvm alias default 20
+
+# Verify
+node -v  # should show v20.x.x
+
+# Clean reinstall
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Expo Go SDK Version Mismatch
+
+**Error: `Project is incompatible with this version of Expo Go`**
+
+Your project's Expo SDK version doesn't match the Expo Go app on your device.
+
+**Solutions:**
+1. **Upgrade project (recommended):**
+   ```bash
+   npx expo upgrade
+   npm install
+   ```
+
+2. **Install matching Expo Go:** Download the SDK-specific version from [expo.dev/go](https://expo.dev/go)
+
+3. **Use development build (advanced):**
+   ```bash
+   npx expo run:android  # or run:ios
+   ```
+
 ### Dependency Issues
 
-If you encounter peer dependency conflicts, use:
+If you encounter peer dependency conflicts:
 ```bash
 npm install --legacy-peer-deps
 ```
 
-### Network Errors
+### Network/Connection Errors
+
+**Cannot connect to backend API:**
 
 - Ensure the backend server is running
-- Check that the API_URL in `config.js` is correct
-- On iOS Simulator, use `localhost`
-- On Android Emulator, you may need to use `10.0.2.2` instead of `localhost`
-- On physical devices, use your computer's IP address
+- Check that `API_URL` in `config.js` is correct:
+  - **iOS Simulator:** Use `http://localhost:3000`
+  - **Android Emulator:** Use `http://10.0.2.2:3000` (Android's special alias for host)
+  - **Physical device:** Use your computer's local IP (e.g., `http://192.168.1.100:3000`)
 
-### Assets Not Found
+**Find your local IP:**
+```bash
+# Linux/macOS
+ip addr show | grep "inet " | grep -v 127.0.0.1
 
-The app uses default Expo assets. If you want custom assets:
-1. Add your images to the `assets/` folder
-2. Update references in `app.json`
+# or
+ifconfig | grep "inet " | grep -v 127.0.0.1
+```
+
+### Metro Bundler Issues
+
+**Error: Metro bundler won't start or shows cache errors**
+
+Clear the cache and restart:
+```bash
+npx expo start -c
+```
+
+### Missing Assets
+
+**Error: `Unable to resolve asset "./assets/icon.png"`**
+
+The app references assets in `app.json` that may not exist:
+1. Create an `assets/` folder if it doesn't exist
+2. Add placeholder images, or
+3. Remove/update asset references in `app.json`
 
 ## Next Steps
 
